@@ -40,11 +40,9 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   /// Initialize vlc player when the platform is ready automatically
   final bool autoInitialize;
 
-
   /// Video start from [startAt]. When initialization is complete
   final Duration? startAt;
 
-  
   /// Set keep playing video in background, when app goes in background.
   /// The default value is false.
   final bool allowBackgroundPlayback;
@@ -101,7 +99,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   VlcPlayerController.asset(
     this.dataSource, {
     this.autoInitialize = true,
-       this.startAt,
+    this.startAt,
     this.allowBackgroundPlayback = false,
     this.package,
     this.hwAcc = HwAcc.auto,
@@ -124,7 +122,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   VlcPlayerController.network(
     this.dataSource, {
     this.autoInitialize = true,
-      this.startAt,
+    this.startAt,
     this.allowBackgroundPlayback = false,
     this.hwAcc = HwAcc.auto,
     this.autoPlay = true,
@@ -146,7 +144,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
   VlcPlayerController.file(
     File file, {
     this.autoInitialize = true,
-       this.startAt,
+    this.startAt,
     this.allowBackgroundPlayback = true,
     this.hwAcc = HwAcc.auto,
     this.autoPlay = true,
@@ -241,10 +239,14 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
             position: Duration.zero,
           );
           break;
-          
+
         case VlcMediaEventType.playing:
-           /// Calling start at
-          if (startAt != null && !_startAtSet) _setStartAt();
+
+          /// Calling start at
+          // _setStartAt();
+          if (startAt != null && !_startAtSet) {
+            _setStartAt();
+          }
           value = value.copyWith(
             isEnded: false,
             isPlaying: true,
@@ -369,18 +371,19 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     final Duration startAtDuration = startAt ?? Duration.zero;
 
     // Checking if startAt is greatet then video's duration then throw error.
-    if (startAtDuration.inMilliseconds > value.duration.inMilliseconds) {
-      throw ArgumentError.value(
-        startAtDuration,
-        'Start At cannot be greater than video duration.',
-      );
-    }
+    // if (startAtDuration.inMilliseconds > value.duration.inMilliseconds) {
+    //   throw ArgumentError.value(
+    //     startAtDuration,
+    //     'Start At cannot be greater than video duration.',
+    //   );
+    // }
 
     // Setting startAt
     _startAtSet = true;
+
     await seekTo(startAtDuration);
   }
-  
+
   /// Dispose controller
   @override
   Future<void> dispose() async {
@@ -426,7 +429,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     String? package,
     bool? autoPlay,
     HwAcc? hwAcc,
-       Duration? startAt,
+    Duration? startAt,
   }) async {
     _dataSourceType = DataSourceType.asset;
     this.package = package;
@@ -436,7 +439,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
       package: package,
       autoPlay: autoPlay,
       hwAcc: hwAcc,
-       startAt: startAt,
+      startAt: startAt,
     );
   }
 
@@ -448,7 +451,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     String dataSource, {
     bool? autoPlay,
     HwAcc? hwAcc,
-       Duration? startAt,
+    Duration? startAt,
   }) async {
     _dataSourceType = DataSourceType.network;
     package = null;
@@ -457,8 +460,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
       dataSourceType: DataSourceType.network,
       autoPlay: autoPlay,
       hwAcc: hwAcc,
-       startAt: startAt,
-      
+      startAt: startAt,
     );
   }
 
@@ -470,7 +472,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     File file, {
     bool? autoPlay,
     HwAcc? hwAcc,
-        Duration? startAt,
+    Duration? startAt,
   }) async {
     _dataSourceType = DataSourceType.file;
     package = null;
@@ -495,7 +497,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
     String? package,
     bool? autoPlay,
     HwAcc? hwAcc,
-       Duration? startAt,
+    Duration? startAt,
   }) async {
     _throwIfNotInitialized('setStreamUrl');
     await vlcPlayerPlatform.stop(_viewId);
@@ -507,7 +509,7 @@ class VlcPlayerController extends ValueNotifier<VlcPlayerValue> {
       hwAcc: hwAcc ?? HwAcc.auto,
       autoPlay: autoPlay ?? true,
     );
-  if (startAt != null) {
+    if (startAt != null) {
       await vlcPlayerPlatform.seekTo(_viewId, startAt);
     }
 
